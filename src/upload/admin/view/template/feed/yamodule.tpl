@@ -175,6 +175,82 @@
 									</div>
 								</div>
 								<!-- row -->
+
+								<!-- B2B Sberbank -->
+								<div class="row">
+									<div class='col-md-12'>
+										<div class='form-horizontal'>
+											<div class="form-group">
+												<label class="control-label col-sm-3"><?php echo $b2b_sberbank_label; ?></label>
+												<div class='col-sm-8'>
+													<div class="checkbox">
+														<label>
+															<input name="ya_b2b_sberbank_on" type="checkbox" value="1"
+															<?php if ($ya_b2b_sberbank_on) { echo "checked"; }?>>
+															<?php echo $b2b_sberbank_on;?>
+														</label>
+													</div>
+												</div>
+											</div>
+											<div class="form-group selectB2bSberbank">
+												<div class="col-sm-9 col-sm-offset-3">
+													<label class="control-label col-sm-4"><?php echo $b2b_sberbank_template_label; ?></label>
+													<div class='col-sm-8'>
+														<input name='ya_b2b_sberbank_description_template' type="text" class="form-control"
+															   value="<?php echo $ya_b2b_sberbank_description_template ?: $b2b_sberbank_template_default; ?>" />
+														<p class="help-block"><?php echo $b2b_sberbank_template_help; ?></p>
+													</div>
+												</div>
+												<div class="col-sm-9 col-sm-offset-3">
+													<label class="control-label col-sm-4"><?php echo $b2b_sberbank_vat_default_label; ?></label>
+													<div class='col-sm-8'>
+														<select name="ya_b2b_sberbank_taxes[default]" class="form-control">
+															<?php foreach ($b2b_sberbank_taxes as $tax_id => $tax_name) { ?>
+															<?php if (isset($ya_b2b_sberbank_taxes["default"]) && $tax_id == $ya_b2b_sberbank_taxes["default"]) { ?>
+															<option value="<?php echo $tax_id; ?>" selected="selected"><?php echo $tax_name; ?></option>
+															<?php } else { ?>
+															<option value="<?php echo $tax_id; ?>"><?php echo $tax_name; ?></option>
+															<?php } ?>
+															<?php } ?>
+														</select>
+														<p class="help-block"><?php echo $b2b_sberbank_vat_default_help; ?></p>
+													</div>
+												</div>
+												<div class="col-sm-9 col-sm-offset-3">
+													<p><b><?php echo $b2b_sberbank_vat_label; ?></b></p>
+													<table class="table table-hover">
+														<tbody>
+														<tr>
+															<td><?php echo $b2b_sberbank_vat_cms_label; ?></td>
+															<td><?php echo $b2b_sberbank_vat_sbbol_label; ?></td>
+														</tr>
+														<?php foreach ($tax_classes as $tax_class_id => $tax_title){ ?>
+														<tr>
+															<td><?php echo $tax_title ?></td>
+															<td>
+																<select name="ya_b2b_sberbank_taxes[<?php echo $tax_class_id ?>]" class="form-control">
+																	<?php foreach ($b2b_sberbank_taxes as $tax_id => $tax_name) { ?>
+																	<?php if (isset($ya_b2b_sberbank_taxes[$tax_class_id]) && $tax_id == $ya_b2b_sberbank_taxes[$tax_class_id]) { ?>
+																	<option value="<?php echo $tax_id; ?>" selected="selected"><?php echo $tax_name; ?></option>
+																	<?php } else { ?>
+																	<option value="<?php echo $tax_id; ?>"><?php echo $tax_name; ?></option>
+																	<?php } ?>
+																	<?php } ?>
+																</select>
+															</td>
+														</tr>
+														<?php } ?>
+														</tbody>
+													</table>
+												</div>
+												<div class="col-sm-9 col-sm-offset-3">
+													<p><?php echo $b2b_sberbank_vat_help; ?></p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+
 								<div class='row'>
 									<div class='col-sm-12'>
 										<h4 class="form-heading"><?php echo $kassa_text_adv_head; ?></h4>
@@ -1234,6 +1310,15 @@ $(document).ready(function(){
     };
     $funcMode.call();
     $(":input[name=ya_kassa_paymode][type=radio]").click($funcMode);
+    function onChangesB2bSberbank() {
+        if ($('input[name=ya_b2b_sberbank_on]').is(':checked')) {
+            $('.selectB2bSberbank').slideDown();
+        } else {
+            $('.selectB2bSberbank').slideUp();
+        }
+    }
+    onChangesB2bSberbank();
+    $("input[name=ya_b2b_sberbank_on]").on('change', onChangesB2bSberbank);
 });
 </script>
 <script type="text/javascript"> (function (d, w, c) { (w[c] = w[c] || []).push(function() { try { w.yaCounter27746007 = new Ya.Metrika({ id:27746007 }); } catch(e) { } }); var n = d.getElementsByTagName("script")[0], s = d.createElement("script"), f = function () { n.parentNode.insertBefore(s, n); }; s.type = "text/javascript"; s.async = true; s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js"; if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); } })(document, window, "yandex_metrika_callbacks");</script>
