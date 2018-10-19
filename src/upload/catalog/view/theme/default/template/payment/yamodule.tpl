@@ -8,9 +8,16 @@
 		position:relative !important;
 	}
 </style>
-<?php if ($kassa_mode){ ?>
+<?php if (isset($b2b_sberbank_error)):
+?><style>#button-confirm{display:none;}</style><?
+    echo $b2b_sberbank_error;
+else:
+	if ($kassa_mode){ ?>
 	<form method="POST" action="<?php echo $kassa_action; ?>" id='paymentForm'>
-		<?php if($kassa_paymode!='1'){ ?>
+		<?php
+			if ($is_b2b_sberbank) { ?>
+				<input type="hidden" name="paymentType" value="2S">
+		    <?php } elseif($kassa_paymode!='1'){ ?>
 			<h3><?php echo $method_label; ?></h3>
 			<!--<table class="radio">
 				<tbody>-->
@@ -54,11 +61,20 @@
 			<input type="hidden" name="customerNumber" value="<?php echo $customerNumber; ?>" >
 			<input type="hidden" name="shopSuccessURL" value="<?php echo $shopSuccessURL; ?>" >
 			<input type="hidden" name="shopFailURL" value="<?php echo $shopFailURL; ?>" >
-			<?php if ($receipt){ ?>
-			<textarea name="ym_merchant_receipt" style="display: none;"><?php echo $receipt; ?></textarea>
-			<?php } ?>
-			<?php if ($phone){ ?> <input type="hidden" name="cps_phone" value="<?php echo $phone; ?>" > <?php } ?>
-			<?php if ($email){ ?> <input type="hidden" name="cps_email" value="<?php echo $email; ?>" >  <?php } ?>
+			<?php if ($is_b2b_sberbank): ?>
+				<input type="hidden" name="payment_purpose" value="<?php echo $b2b_sberbank_payment_purpose; ?>" >
+				<input type="hidden" name="vatType" value="<?php echo $b2b_sberbank_vatType; ?>" >
+				<?php if ($b2b_sberbank_vatType === 'calculated'): ?>
+					<input type="hidden" name="vatRate" value="<?php echo $b2b_sberbank_vatRate; ?>" >
+					<input type="hidden" name="vatSum" value="<?php echo $b2b_sberbank_vatSum; ?>" >
+				<? endif; ?>
+			<?php else: ?>
+				<?php if ($receipt){ ?>
+					<textarea name="ym_merchant_receipt" style="display: none;"><?php echo $receipt; ?></textarea>
+				<?php } ?>
+				<?php if ($phone){ ?> <input type="hidden" name="cps_phone" value="<?php echo $phone; ?>" > <?php } ?>
+				<?php if ($email){ ?> <input type="hidden" name="cps_email" value="<?php echo $email; ?>" >  <?php } ?>
+			<?php endif; ?>
 			<input type="hidden" name="cms_name" value="ya_opencart2" >
 	</form>
 	<div class="buttons">
@@ -108,7 +124,8 @@
 			<input type="button" id="button-confirm" value="<?php echo $button_confirm; ?>" class="btn btn-primary" />
 		</div>
 	</div>
-<?php }?>
+<?php }
+endif; ?>
 <script type="text/javascript"><!--
 	$('#button-confirm').on('click', function(e) {
 		e.preventDefault();

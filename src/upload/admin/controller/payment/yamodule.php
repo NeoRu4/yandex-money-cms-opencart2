@@ -546,11 +546,13 @@ class ControllerPaymentYamodule extends Controller {
 	public function install() {
 		$this->load->model('setting/setting');
 		$this->model_setting_setting->editSetting('yamodule_status', array('yamodule_status' => 1));
+		$this->model_setting_setting->editSetting('yamoduleb2bsberbank_status', array('yamoduleb2bsberbank_status' => 1));
 	}
 
 	public function uninstall() {
 		$this->load->model('setting/setting');
 		$this->model_setting_setting->editSetting('yamodule_status', array('yamodule_status' => 0));
+		$this->model_setting_setting->editSetting('yamoduleb2bsberbank_status', array('yamoduleb2bsberbank_status' => 0));
 	}
 }
 /*

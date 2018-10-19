@@ -25,8 +25,11 @@ $_['text_method_ma']       = 'Payment via MasterPass';
 $_['text_method_pb']       = 'Payment via Promsvyazbank';
 $_['text_method_qw']       = 'Payment via QIWI Wallet';
 $_['text_method_cr']       = 'Заплатить по частям';
+$_['text_method_2s']         = 'Sberbank Business Online';
 
 $_['text_order'] = 'Order';
 $_['text_comment'] = 'Commentary';
 $_['wallet_ok_txt'] = 'Thank you! Your order is paid for. We are now processing it.';
 $_['text_back'] = 'Back';
+
+$_['b2b_sberbank_vat_error'] = "Your cart contains products with different VAT rates, and you won't be able to pay for them at the same time. You can divide the purchase into a few steps: first, pay for products with one VAT rate, then pay for the products with the other.";

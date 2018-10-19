@@ -50,6 +50,9 @@ class ControllerFeedYamodule extends Controller {
         'ya_kassa_tax',
         'ya_kassa_tax_default',
         'ya_kassa_show_in_footer',
+        'ya_b2b_sberbank_on',
+        'ya_b2b_sberbank_description_template',
+        'ya_b2b_sberbank_taxes',
 	);
 
 	public $fields_metrika = array(
@@ -334,8 +337,10 @@ class ControllerFeedYamodule extends Controller {
         $for23 = (version_compare(VERSION, "2.3.0", '>='))?"extension/":"";
         if (!$this->Sget('ya_kassa_active') && !$this->Sget('ya_p2p_active') && !$this->Sget('ya_fast_pay_active')) {
             $this->model_setting_setting->editSetting('yamodule_status', array('yamodule_status' => 0));
+            $this->model_setting_setting->editSetting('yamoduleb2bsberbank_status', array('yamoduleb2bsberbank_status' => 0));
         } else{
             $this->model_setting_setting->editSetting('yamodule_status', array('yamodule_status' => 1));
+            $this->model_setting_setting->editSetting('yamoduleb2bsberbank_status', array('yamoduleb2bsberbank_status' => 1));
         }
 		if ($updater!==false) foreach (array('kassa','p2p','metrika','market','pokupki', 'fast_pay') as $type) $this->session->data[$type.'_status'][] = $this->success_alert($updater, 'warning');
 		
@@ -639,7 +644,10 @@ class ControllerFeedYamodule extends Controller {
 			'p2p_sv','p2p_number','p2p_idapp','p2p_pw','p2p_linkapp','lbl_mws_main','txt_mws_main','lbl_mws_alert','lbl_mws_cn','lbl_mws_orgname','lbl_mws_email',
 			'lbl_mws_connect','lbl_mws_crt','lbl_mws_doc','txt_mws_doc','txt_mws_cer','tab_mws_before','tab_row_sign','tab_row_cause','tab_row_primary','btn_mws_gen',
 			'btn_mws_csr','btn_mws_doc','btn_mws_crt','btn_mws_crt_load','ya_version','text_license','market','kassa','metrika','pokupki','p2p','active','active_on',
-			'active_off','log','button_cancel','text_installed','button_save','button_cancel','pokupki_text_status'
+			'active_off','log','button_cancel','text_installed','button_save','button_cancel','pokupki_text_status',
+            'b2b_sberbank_label', 'b2b_sberbank_on', 'b2b_sberbank_template_label', 'b2b_sberbank_template_default',
+            'b2b_sberbank_template_help', 'b2b_sberbank_vat_default_label', 'b2b_sberbank_vat_default_help',
+            'b2b_sberbank_vat_label', 'b2b_sberbank_vat_cms_label', 'b2b_sberbank_vat_sbbol_label', 'b2b_sberbank_vat_help',
 		);
 		foreach ($arLang as $lang_name) $data[$lang_name] = $this->language->get($lang_name);
 		$data['mod_off'] = sprintf($this->language->get('mod_off'), $this->url->link('extension/payment', 'token=' . $this->session->data['token'] . '&extension=yamodule', true));
@@ -680,6 +688,15 @@ class ControllerFeedYamodule extends Controller {
 		/** End FastPay template variables */
 
 //		taxes
+
+        $data['b2b_sberbank_taxes'] = array(
+            'untaxed' => $this->language->get('b2b_sberbank_vat_untaxed'),
+            '7'       => '7%',
+            '10'      => '10%',
+            '18'      => '18%',
+        );
+
+        $data['tax_classes']   = $this->getShopTaxRates();
 
         //if ($this->config->get('ya_kassa_send_check')) {
             $this->load->model('localisation/tax_class');
@@ -820,6 +837,19 @@ class ControllerFeedYamodule extends Controller {
 		$end_tpl = (version_compare(VERSION, "2.2.0", '>='))?"":".tpl";
 		$this->response->setOutput($this->load->view($for23.'feed/yamodule'.$end_tpl, $data));
 	}
+
+    private function getShopTaxRates()
+    {
+        $this->load->model('localisation/tax_class');
+        $model = $this->model_localisation_tax_class;
+
+        $result = array();
+        foreach ($model->getTaxClasses() as $taxRate) {
+            $result[$taxRate['tax_class_id']] = $taxRate['title'];
+        }
+
+        return $result;
+    }
 
 	public function errors_alert($text)
 	{
@@ -967,6 +997,7 @@ class ControllerFeedYamodule extends Controller {
 		$this->load->model('extension/extension');
 		$this->model_setting_setting->editSetting('yandexbuy_customer', array('yandexbuy_customer' => $customer_id));
 		$this->model_setting_setting->editSetting('yamodule_status', array('yamodule_status' => 1));
+		$this->model_setting_setting->editSetting('yamoduleb2bsberbank_status', array('yamoduleb2bsberbank_status' => 1));
 		$this->model_extension_extension->install('payment', 'yamodule');
 		$this->model_extension_extension->getInstalled('payment');
 		//$this->load->controller('extension/modification/refresh');
@@ -1029,6 +1060,7 @@ class ControllerFeedYamodule extends Controller {
 		$this->load->model('setting/setting');
 		$cu = $this->getCustomer($this->config->get('yandexbuy_customer'));
 		$this->model_setting_setting->editSetting('yamodule_status', array('yamodule_status' => 0));
+		$this->model_setting_setting->editSetting('yamoduleb2bsberbank_status', array('yamoduleb2bsberbank_status' => 0));
 		$this->load->model('extension/extension');
         $this->model_setting_setting->deleteSetting('ya_fast_pay_active');
         $this->model_setting_setting->deleteSetting('ya_fast_pay_os');
