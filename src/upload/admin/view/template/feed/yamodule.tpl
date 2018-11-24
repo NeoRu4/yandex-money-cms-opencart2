@@ -42,7 +42,7 @@
 								<?php if($mod_status) { ?>
 								<form action="<?php echo $action; ?>" method="POST" id="form-seting" class="kassa_form form-horizontal">
 									<input type="hidden" value="kassa" name="type_data"/>
-								<div class='row'>
+								<div class='row form-group'>
 									<div class='col-sm-12'>
 										<p><?php echo $kassa_text_connect; ?></p>
 										<div class='form-horizontal'>
@@ -88,7 +88,7 @@
 									</div>
 								</div>
 								<!-- row -->
-								<div class='row'>
+								<div class='row form-group'>
 									<div class='col-sm-12'><h4 class="form-heading"><?php echo $kassa_text_lk_head; ?></h4></div>
 									<div class='col-sm-12'>
 										<p><?php echo $kassa_text_get_setting; ?></p>
@@ -112,7 +112,7 @@
 									</div>
 								</div>
 								<!-- row -->
-								<div class='row'>
+								<div class='row form-group'>
 									<div class='col-sm-12'><h4 class="form-heading"><?php echo $kassa_text_paymode_head; ?></h4></div>
 									<div class='col-md-12'>
 										<div class='form-horizontal'>
@@ -177,7 +177,7 @@
 								<!-- row -->
 
 								<!-- B2B Sberbank -->
-								<div class="row">
+								<div class="row form-group">
 									<div class='col-md-12'>
 										<div class='form-horizontal'>
 											<div class="form-group">
@@ -251,7 +251,7 @@
 									</div>
 								</div>
 
-								<div class='row'>
+								<div class='row form-group'>
 									<div class='col-sm-12'>
 										<h4 class="form-heading"><?php echo $kassa_text_adv_head; ?></h4>
 									</div>
@@ -313,114 +313,114 @@
 										</div>
 									</div>
 								</div>
-									<!-- -->
-									<div class='row'>
-										<div class='col-sm-12'>
-											<div class="form-group">
-												<label class="col-sm-3 control-label"><?php echo $kassa_text_inv; ?></label>
-												<div class="col-sm-9">
-													<label class='radio-inline'>
-														<input type="radio" <?php echo ($ya_kassa_inv ? ' checked="checked"' : ''); ?> name="ya_kassa_inv" value="1"> <?php echo $kassa_text_debug_en; ?>
-													</label>
-													<label class='radio-inline'>
-														<input type="radio" <?php echo (!$ya_kassa_inv ? ' checked="checked"' : ''); ?> name="ya_kassa_inv" value="0"> <?php echo $kassa_text_debug_dis; ?>
-													</label>
-													<p class="help-block"></p>
-												</div>
-												<div class='col-sm-8 col-sm-offset-3'>
-													<p class="help-block"><?php echo $kassa_text_inv_pattern; ?></p>
-												</div>
-												<div class="invoice-setting form-horizontal">
-													<label class="col-sm-3 control-label"><?php echo $kassa_text_invhelp; ?></label>
-													<div class="col-sm-9">
-														<label for='ya_kassa_inv_subject' class="col-sm-3 control-label"><?php echo $kassa_text_inv_subj; ?></label>
-														<div class="col-sm-9">
-															<input name="ya_kassa_inv_subject" class="form-control" value="<?php echo $ya_kassa_inv_subject; ?>" id="ya_kassa_inv_subject">
-															<p class="help-block"><?php echo $kassa_text_inv_subjhelp; ?></p>
-														</div>
-													</div>
-													<label class="col-sm-3 control-label"></label>
-													<div class="col-sm-9">
-														<label for="ya_kassa_inv_message" class="col-sm-3 control-label"><?php echo $kassa_text_inv_text; ?></label>
-														<div class="col-sm-9">
-															<textarea name="ya_kassa_inv_message" id="ya_kassa_inv_message" class="form-control"><?php echo (($ya_kassa_inv_message)?$ya_kassa_inv_message:''); ?></textarea>
-															<p class="help-block"><?php echo $kassa_text_inv_texthelp; ?></p>
-														</div>
-													</div>
-													<label class="col-sm-3 control-label"></label>
-													<div class="col-sm-9">
-														<div class="col-sm-3"></div>
-														<div class="col-sm-9">
-															<div class='checkbox-inline'>
-																<input class="" type="checkbox" <?php echo ($ya_kassa_inv_logo ? ' checked="checked"' : ''); ?> name="ya_kassa_inv_logo" value="1">
-																<?php echo $kassa_text_inv_logo; ?>
-															</div>
-														</div>
-													</div>
-												</div>
-												<!-- -->
-											</div>
-										</div>
-									</div>
-									<!-- -->
-									<!-- -->
-									<div class='row'>
-										<div class='col-sm-12'>
-											<div class="form-group">
-												<label class="col-sm-3 control-label">Отправлять в Яндекс.Кассу данные для чеков (54-ФЗ)</label>
-												<div class="col-sm-9">
-													<label class='radio-inline'>
-														<input type="radio" <?php echo ($ya_kassa_send_check ? ' checked="checked"' : ''); ?> name="ya_kassa_send_check" value="1"> <?php echo $kassa_text_debug_en; ?>
-													</label>
-													<label class='radio-inline'>
-														<input type="radio" <?php echo (!$ya_kassa_send_check ? ' checked="checked"' : ''); ?> name="ya_kassa_send_check" value="0"> <?php echo $kassa_text_debug_dis; ?>
-													</label>
-												</div>
-												<!-- -->
-												<div class="col-sm-8 col-sm-offset-3 taxesArea">
-													<div class="form-group">
-														<label class="col-sm-4 control-label">Ставка по умолчанию</label>
-														<div class="col-sm-8">
-															<select name="ya_kassa_tax_default" id="ya_kassa_tax_default" class="form-control">
-																<option <?= $ya_kassa_tax_default == 1 ? 'selected' : '';?> value="1">Без НДС</option>
-																<option <?= $ya_kassa_tax_default == 2 ? 'selected' : '';?> value="2">0%</option>
-																<option <?= $ya_kassa_tax_default == 3 ? 'selected' : '';?> value="3">10%</option>
-																<option <?= $ya_kassa_tax_default == 4 ? 'selected' : '';?> value="4">18%</option>
-																<option <?= $ya_kassa_tax_default == 5 ? 'selected' : '';?> value="5">Рассчётная ставка 10/110</option>
-																<option <?= $ya_kassa_tax_default == 6 ? 'selected' : '';?> value="6">Рассчётная ставка 18/118</option>
-															</select>
-															<p class="help-block">Ставка по умолчанию будет в чеке, если в карточке товара не указана другая ставка</p>
-														</div>
-													</div>
-												</div>
-												<div class="col-sm-8 col-sm-offset-3 taxesArea">
-                                                    Ставка в вашем магазине
-												</div>
-												<div class="col-sm-8 col-sm-offset-3 taxesArea">
-													<p class="help-block">Слева — ставка НДС в вашем магазине, справа — в Яндекс.Кассе. Пожалуйста, сопоставьте их.</p>
-												</div>
-												<div class="col-sm-8 col-sm-offset-3 taxesArea">
-													<?php echo $kassa_taxes; ?>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class='row'>
-										<div class='col-sm-12'>
-											<div class="form-group">
-												<label class="col-sm-3 control-label">Показывать ссылку на сайт Кассы</label>
-												<div class="col-sm-9">
-													<label class='radio-inline'>
-														<input type="radio" <?php echo ($ya_kassa_show_in_footer ? ' checked="checked"' : ''); ?> name="ya_kassa_show_in_footer" value="1"> <?php echo $kassa_text_debug_en; ?>
-													</label>
-													<label class='radio-inline'>
-														<input type="radio" <?php echo (!$ya_kassa_show_in_footer ? ' checked="checked"' : ''); ?> name="ya_kassa_show_in_footer" value="0"> <?php echo $kassa_text_debug_dis; ?>
-													</label>
-													<p class="help-block">Ссылка будет отображаться в подвале вашего сайта.</p>
-												</div>
-											</div>
-										</div>
-									</div>
+                                <!-- -->
+                                <div class='row form-group'>
+                                    <div class='col-sm-12'>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label"><?php echo $kassa_text_inv; ?></label>
+                                            <div class="col-sm-9">
+                                                <label class='radio-inline'>
+                                                    <input type="radio" <?php echo ($ya_kassa_inv ? ' checked="checked"' : ''); ?> name="ya_kassa_inv" value="1"> <?php echo $kassa_text_debug_en; ?>
+                                                </label>
+                                                <label class='radio-inline'>
+                                                    <input type="radio" <?php echo (!$ya_kassa_inv ? ' checked="checked"' : ''); ?> name="ya_kassa_inv" value="0"> <?php echo $kassa_text_debug_dis; ?>
+                                                </label>
+                                                <p class="help-block"></p>
+                                            </div>
+                                            <div class='col-sm-8 col-sm-offset-3'>
+                                                <p class="help-block"><?php echo $kassa_text_inv_pattern; ?></p>
+                                            </div>
+                                            <div class="invoice-setting form-horizontal">
+                                                <label class="col-sm-3 control-label"><?php echo $kassa_text_invhelp; ?></label>
+                                                <div class="col-sm-9">
+                                                    <label for='ya_kassa_inv_subject' class="col-sm-3 control-label"><?php echo $kassa_text_inv_subj; ?></label>
+                                                    <div class="col-sm-9">
+                                                        <input name="ya_kassa_inv_subject" class="form-control" value="<?php echo $ya_kassa_inv_subject; ?>" id="ya_kassa_inv_subject">
+                                                        <p class="help-block"><?php echo $kassa_text_inv_subjhelp; ?></p>
+                                                    </div>
+                                                </div>
+                                                <label class="col-sm-3 control-label"></label>
+                                                <div class="col-sm-9">
+                                                    <label for="ya_kassa_inv_message" class="col-sm-3 control-label"><?php echo $kassa_text_inv_text; ?></label>
+                                                    <div class="col-sm-9">
+                                                        <textarea name="ya_kassa_inv_message" id="ya_kassa_inv_message" class="form-control"><?php echo (($ya_kassa_inv_message)?$ya_kassa_inv_message:''); ?></textarea>
+                                                        <p class="help-block"><?php echo $kassa_text_inv_texthelp; ?></p>
+                                                    </div>
+                                                </div>
+                                                <label class="col-sm-3 control-label"></label>
+                                                <div class="col-sm-9">
+                                                    <div class="col-sm-3"></div>
+                                                    <div class="col-sm-9">
+                                                        <div class='checkbox-inline'>
+                                                            <input class="" type="checkbox" <?php echo ($ya_kassa_inv_logo ? ' checked="checked"' : ''); ?> name="ya_kassa_inv_logo" value="1">
+                                                            <?php echo $kassa_text_inv_logo; ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- -->
+                                <!-- -->
+                                <div class='row form-group'>
+                                    <div class='col-sm-12'>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Отправлять в Яндекс.Кассу данные для чеков (54-ФЗ)</label>
+                                            <div class="col-sm-9">
+                                                <label class='radio-inline'>
+                                                    <input type="radio" <?php echo ($ya_kassa_send_check ? ' checked="checked"' : ''); ?> name="ya_kassa_send_check" value="1"> <?php echo $kassa_text_debug_en; ?>
+                                                </label>
+                                                <label class='radio-inline'>
+                                                    <input type="radio" <?php echo (!$ya_kassa_send_check ? ' checked="checked"' : ''); ?> name="ya_kassa_send_check" value="0"> <?php echo $kassa_text_debug_dis; ?>
+                                                </label>
+                                            </div>
+                                            <!-- -->
+                                            <div class="col-sm-8 col-sm-offset-3 taxesArea">
+                                                <div class="form-group">
+                                                    <label class="col-sm-4 control-label">Ставка по умолчанию</label>
+                                                    <div class="col-sm-8">
+                                                        <select name="ya_kassa_tax_default" id="ya_kassa_tax_default" class="form-control">
+                                                            <option <?= $ya_kassa_tax_default == 1 ? 'selected' : '';?> value="1">Без НДС</option>
+                                                            <option <?= $ya_kassa_tax_default == 2 ? 'selected' : '';?> value="2">0%</option>
+                                                            <option <?= $ya_kassa_tax_default == 3 ? 'selected' : '';?> value="3">10%</option>
+                                                            <option <?= $ya_kassa_tax_default == 4 ? 'selected' : '';?> value="4">18%</option>
+                                                            <option <?= $ya_kassa_tax_default == 5 ? 'selected' : '';?> value="5">Рассчётная ставка 10/110</option>
+                                                            <option <?= $ya_kassa_tax_default == 6 ? 'selected' : '';?> value="6">Рассчётная ставка 18/118</option>
+                                                        </select>
+                                                        <p class="help-block">Ставка по умолчанию будет в чеке, если в карточке товара не указана другая ставка</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-8 col-sm-offset-3 taxesArea">
+                                                Ставка в вашем магазине
+                                            </div>
+                                            <div class="col-sm-8 col-sm-offset-3 taxesArea">
+                                                <p class="help-block">Слева — ставка НДС в вашем магазине, справа — в Яндекс.Кассе. Пожалуйста, сопоставьте их.</p>
+                                            </div>
+                                            <div class="col-sm-8 col-sm-offset-3 taxesArea">
+                                                <?php echo $kassa_taxes; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='row form-group'>
+                                    <div class='col-sm-12'>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Показывать ссылку на сайт Кассы</label>
+                                            <div class="col-sm-9">
+                                                <label class='radio-inline'>
+                                                    <input type="radio" <?php echo ($ya_kassa_show_in_footer ? ' checked="checked"' : ''); ?> name="ya_kassa_show_in_footer" value="1"> <?php echo $kassa_text_debug_en; ?>
+                                                </label>
+                                                <label class='radio-inline'>
+                                                    <input type="radio" <?php echo (!$ya_kassa_show_in_footer ? ' checked="checked"' : ''); ?> name="ya_kassa_show_in_footer" value="0"> <?php echo $kassa_text_debug_dis; ?>
+                                                </label>
+                                                <p class="help-block">Ссылка будет отображаться в подвале вашего сайта.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 									<!-- -->
 								</form>
 								<?php }  else { ?>
