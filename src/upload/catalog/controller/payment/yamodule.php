@@ -212,14 +212,14 @@ class ControllerPaymentYamodule extends Controller
         $error_log = null;
     }
 
-    public function makeOrder($order_id, $red = true)
+    public function makeOrder($order_id, $red = true, $comment = '')
     {
         if ($order_id) {
             $this->load->model('checkout/order');
             $order_info  = $this->model_checkout_order->getOrder($order_id);
             $status_name = ($this->config->get('ya_p2p_active')) ? "ya_p2p_os" : "ya_kassa_os";
             if ($order_info['order_status_id'] != $this->config->get($status_name)) {
-                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get($status_name), '', true);
+                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get($status_name), $comment, true);
             }
             if ($red) {
                 $this->response->redirect($this->url->link('checkout/success', '', 'SSL'));
@@ -506,7 +506,27 @@ class ControllerPaymentYamodule extends Controller
                 if (number_format($data['orderSumAmount'], 2) == $sum) {
                     if ($data['action'] == 'paymentAviso') {
                         if ($order_id > 0) {
-                            $this->makeOrder($order_id, false);
+                            $fields   = array(
+                                'b2b_full_name'   => 'Полное наименование',
+                                'b2b_short_name'  => 'Сокращенное наименование',
+                                'b2b_adress'      => 'Адрес',
+                                'b2b_inn'         => 'ИНН',
+                                'b2b_kpp'         => 'КПП',
+                                'b2b_bank'        => 'Наименование банка',
+                                'b2b_bank_office' => 'Отделение банка',
+                                'b2b_bik'         => 'БИК',
+                                'b2b_account'     => 'Номер счета',
+                            );
+                            $messages = array();
+                            foreach ($fields as $field => $caption) {
+                                if (isset($data[$field])) {
+                                    $messages[] = $caption.': '.$data[$field];
+                                }
+                            }
+
+                            $comment = empty($messages) ? '' : implode("\n", $messages);
+
+                            $this->makeOrder($order_id, false, $comment);
                         }
                     }
                     $this->{"model_".str_replace("/", "_", $for23)."yamodel_yamoney"}->sendCode($data, $shopid, '0',
