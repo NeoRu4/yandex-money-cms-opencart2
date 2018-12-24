@@ -89,8 +89,11 @@ class ControllerPaymentYamodule extends Controller
                 $shippingCost = 0;
             }
 
-            $disc = number_format(($order_info['total'] - $shippingCost) / $sum, 2, '.', '');
-
+            $disc                          = number_format(($order_info['total'] - $shippingCost) / $sum, 2, '.', '');
+            $defaultPaymentMode            = $this->config->get('ya_kassa_default_payment_mode');
+            $defaultPaymentSubject         = $this->config->get('ya_kassa_default_payment_subject');
+            $defaultDeliveryPaymentMode    = $this->config->get('ya_kassa_def_del_payment_mode');
+            $defaultDeliveryPaymentSubject = $this->config->get('ya_kassa_def_del_payment_subject');
             foreach ($cart_product as $row) {
                 $row['price'] = $this->tax->calculate($row['price'], $row['tax_class_id'],
                     $this->config->get('config_tax'));
@@ -102,12 +105,14 @@ class ControllerPaymentYamodule extends Controller
                     $ya_kassa_tax = $this->config->get('ya_kassa_tax');
                     if (isset($ya_kassa_tax[$tax_rate_id])) {
                         $receipt->addItem($row['name'], $row['price'] * $disc, $row['quantity'],
-                            $ya_kassa_tax[$tax_rate_id]);
+                            $ya_kassa_tax[$tax_rate_id], $defaultPaymentMode, $defaultPaymentSubject);
                     } else {
-                        $receipt->addItem($row['name'], $row['price'] * $disc, $row['quantity']);
+                        $receipt->addItem($row['name'], $row['price'] * $disc, $row['quantity'], $defaultPaymentMode,
+                            $defaultPaymentSubject);
                     }
                 } else {
-                    $receipt->addItem($row['name'], $row['price'] * $disc, $row['quantity']);
+                    $receipt->addItem($row['name'], $row['price'] * $disc, $row['quantity'], $defaultPaymentMode,
+                        $defaultPaymentSubject);
                 }
             }
 
@@ -116,7 +121,8 @@ class ControllerPaymentYamodule extends Controller
                 isset($this->session->data['shipping_method']['title']) &&
                 $shippingCost > 0
             ) {
-                $receipt->addShipping($this->session->data['shipping_method']['title'], $shippingCost);
+                $receipt->addShipping($this->session->data['shipping_method']['title'], $shippingCost,null,
+                    $defaultDeliveryPaymentMode, $defaultDeliveryPaymentSubject);
             }
             if ($receipt->notEmpty()) {
                 $receipt->normalize($totalAmount);
@@ -219,7 +225,8 @@ class ControllerPaymentYamodule extends Controller
             $order_info  = $this->model_checkout_order->getOrder($order_id);
             $status_name = ($this->config->get('ya_p2p_active')) ? "ya_p2p_os" : "ya_kassa_os";
             if ($order_info['order_status_id'] != $this->config->get($status_name)) {
-                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get($status_name), $comment, true);
+                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get($status_name), $comment,
+                    true);
             }
             if ($red) {
                 $this->response->redirect($this->url->link('checkout/success', '', 'SSL'));

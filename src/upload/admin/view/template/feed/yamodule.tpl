@@ -402,6 +402,64 @@
                                             <div class="col-sm-8 col-sm-offset-3 taxesArea">
                                                 <?php echo $kassa_taxes; ?>
                                             </div>
+                                            <div class="col-sm-8 col-sm-offset-3 taxesArea">
+                                                <label class="col-sm-2 control-label">
+                                                    <?php echo $kassa_default_payment_mode_label; ?>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <select id="kassa-default-payment-mode" name="ya_kassa_default_payment_mode"
+                                                            class="form-control">
+                                                        <?php foreach ($paymentModeEnum as $id => $name) : ?>
+                                                        <option value="<?php echo $id; ?>"
+                                                        <?php echo $defaultPaymentMode == $id ? ' selected' : ''; ?>><?php echo $name; ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-8 col-sm-offset-3 taxesArea">
+                                                <label class="col-sm-2 control-label">
+                                                    <?php echo $kassa_default_payment_subject_label; ?>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <select id="kassa-default-payment-subject"
+                                                            name="ya_kassa_default_payment_subject" class="form-control">
+                                                        <?php foreach ($paymentSubjectEnum as $id => $name) : ?>
+                                                        <option value="<?php echo $id; ?>"
+                                                        <?php echo $defaultPaymentSubject == $id ? ' selected' : ''; ?>><?php echo $name; ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-8 col-sm-offset-3 taxesArea">
+                                                <label class="col-sm-2 control-label">
+                                                    <?php echo $kassa_default_delivery_payment_mode_label; ?>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <select id="kassa-tax-rate-default"
+                                                            name="ya_kassa_def_del_payment_mode" class="form-control">
+                                                        <?php foreach ($paymentModeEnum as $id => $name) : ?>
+                                                        <option value="<?php echo $id; ?>"<?php echo $defaultDeliveryPaymentMode == $id ? ' selected' : ''; ?>><?php echo $name; ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-sm-8 col-sm-offset-3 taxesArea">
+                                                <label class="col-sm-2 control-label">
+                                                    <?php echo $kassa_default_delivery_payment_subject_label; ?>
+                                                </label>
+                                                <div class="col-sm-10">
+                                                    <select id="kassa-tax-rate-default"
+                                                            name="ya_kassa_def_del_payment_subject"
+                                                            class="form-control">
+                                                        <?php foreach ($paymentSubjectEnum as $id => $name) : ?>
+                                                        <option value="<?php echo $id; ?>" <?php echo $defaultDeliveryPaymentSubject == $id ? ' selected' : ''; ?> ><?php echo $name; ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
