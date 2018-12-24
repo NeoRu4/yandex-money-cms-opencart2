@@ -2,7 +2,7 @@
 // Heading
 $_['heading_title']      = 'Y.CMS by <a target="_blank" href="https://kassa.yandex.ru">Yandex.Checkout</a>';
 $_['heading_title_ya']      = 'Y.CMS by Yandex.Checkout';
-$_['ya_version']      = '2.2.10';
+$_['ya_version']      = '2.2.11';
 $_['text_license']      = "By working with the module, you agree with <a href='https://money.yandex.ru/doc.xml?id=527052' target='_blank'>terms of its use</a>.";
 $_['text_need_update']      = "Your module is outdated. You can <a target='_blank' href='https://github.com/yandex-money/yandex-money-cms-opencart2/releases'>download and install</a> the new one (%s)";;
 
@@ -243,3 +243,8 @@ $_['b2b_sberbank_vat_cms_label'] = "VAT rate at your store";
 $_['b2b_sberbank_vat_sbbol_label'] = "VAT rate for Sberbank Business Online";
 $_['b2b_sberbank_vat_untaxed']   = "Without VAT";
 $_['b2b_sberbank_vat_help']      = "There is a restriction for payments via Sberbank Business Online: one receipt can only contain products with the same VAT rate. If the client wants to pay for products with different VAT rates at the same time, we will show him the message explaining that it's not possible.";
+
+$_['kassa_default_payment_mode_label']             = 'Признак способа расчета';
+$_['kassa_default_payment_subject_label']          = 'Признак предмета расчета';
+$_['kassa_default_delivery_payment_mode_label']    = 'Признак способа расчета для доставки';
+$_['kassa_default_delivery_payment_subject_label'] = 'Признак предмета расчета для доставки';

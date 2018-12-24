@@ -2,7 +2,7 @@
 // Heading
 $_['heading_title']    = 'Y.CMS от <a target="_blank" href="https://kassa.yandex.ru">Яндекс.Кассы</a>';
 $_['heading_title_ya'] = 'Y.CMS от Яндекс.Кассы';
-$_['ya_version']       = '2.2.10';
+$_['ya_version']       = '2.2.11';
 $_['text_license']     = "Работая с модулем, вы автоматически соглашаетесь с <a href='https://money.yandex.ru/doc.xml?id=527052' target='_blank'>условиями его использования</a>.";
 $_['text_need_update'] = "У вас неактуальная версия модуля. Вы можете <a target='_blank' href='https://github.com/yandex-money/yandex-money-cms-opencart2/releases'>загрузить и установить</a> новую (%s)";;
 
@@ -245,3 +245,8 @@ $_['b2b_sberbank_vat_cms_label'] = "Ставка НДС в вашем магаз
 $_['b2b_sberbank_vat_sbbol_label'] = "Ставка НДС для Сбербанк Бизнес Онлайн";
 $_['b2b_sberbank_vat_untaxed']   = "Без НДС";
 $_['b2b_sberbank_vat_help']      = "При оплате через Сбербанк Бизнес Онлайн есть ограничение: в одном чеке могут быть только товары с одинаковой ставкой НДС. Если клиент захочет оплатить за один раз товары с разными ставками — мы покажем ему сообщение, что так сделать не получится.";
+
+$_['kassa_default_payment_mode_label']             = 'Признак способа расчета';
+$_['kassa_default_payment_subject_label']          = 'Признак предмета расчета';
+$_['kassa_default_delivery_payment_mode_label']    = 'Признак способа расчета для доставки';
+$_['kassa_default_delivery_payment_subject_label'] = 'Признак предмета расчета для доставки';

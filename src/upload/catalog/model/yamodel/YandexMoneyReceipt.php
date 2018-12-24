@@ -1,7 +1,8 @@
 <?php
 
 if (!interface_exists('JsonSerializable', false)) {
-    interface JsonSerializable {
+    interface JsonSerializable
+    {
         function jsonSerialize();
     }
 }
@@ -42,58 +43,76 @@ class YandexMoneyReceipt implements JsonSerializable
     public function __construct($taxRateId = self::DEFAULT_TAX_RATE_ID, $currency = self::DEFAULT_CURRENCY)
     {
         $this->taxRateId = $taxRateId;
-        $this->items = array();
-        $this->currency = $currency;
+        $this->items     = array();
+        $this->currency  = $currency;
     }
 
     /**
      * Добавляет в чек товар
+     *
      * @param string $title Название товара
      * @param float $price Цена товара
      * @param float $quantity Количество покупаемого товара
      * @param int|null $taxId Идентификатор ставки НДС для товара или null
+     * @param string $paymentModeType
+     * @param string $paymentSubjectType
+     *
      * @return YandexMoneyReceipt
      */
-    public function addItem($title, $price, $quantity = 1.0, $taxId = null)
+    public function addItem($title, $price, $quantity = 1.0, $taxId = null, $paymentModeType = '', $paymentSubjectType = '')
     {
         if ($price <= 0 || $quantity <= 0) {
             return $this;
         }
-        $this->items[] = new YandexMoneyReceiptItem($title, $quantity, $price, false, $taxId);
+        $this->items[] = new YandexMoneyReceiptItem($title, $quantity, $price, false, $taxId, $paymentModeType,
+            $paymentSubjectType);
+
         return $this;
     }
 
     /**
      * Добавляет в чек доставку
+     *
      * @param string $title Название способа доставки
      * @param float $price Цена доставки
      * @param int|null $taxId Идентификатор ставки НДС для доставки или null
+     *
+     * @param string $paymentModeType
+     * @param string $paymentSubjectType
+     *
      * @return YandexMoneyReceipt
      */
-    public function addShipping($title, $price, $taxId = null)
+    public function addShipping($title, $price, $taxId = null, $paymentModeType = '', $paymentSubjectType = '')
     {
         if ($price <= 0) {
             return $this;
         }
-        $this->shipping = new YandexMoneyReceiptItem($title, 1.0, $price, true, $taxId);
-        $this->items[] = $this->shipping;
+        $this->shipping = new YandexMoneyReceiptItem($title, 1.0, $price, true, $taxId, $paymentModeType,
+            $paymentSubjectType);
+        $this->items[]  = $this->shipping;
+
         return $this;
     }
 
     /**
      * Устанавливает адрес доставки чека - или имейл или номер телефона
+     *
      * @param string $value Номер телефона или имэйл получателя
+     *
      * @return YandexMoneyReceipt
      */
     public function setCustomerContact($value)
     {
         $this->customerContact = $value;
+
         return $this;
     }
 
     /**
      * Возвращает стоимость заказа исходя из состава чека
+     *
      * @param bool $withShipping Добавить ли к стоимости заказа стоимость доставки
+     *
      * @return float Общая стоимость заказа
      */
     public function getAmount($withShipping = true)
@@ -104,6 +123,7 @@ class YandexMoneyReceipt implements JsonSerializable
                 $result += $item->getAmount();
             }
         }
+
         return $result;
     }
 
@@ -118,18 +138,21 @@ class YandexMoneyReceipt implements JsonSerializable
         foreach ($this->items as $item) {
             if ($item->getPrice() >= 0.0) {
                 $items[] = array(
-                    'quantity' => (string)$item->getQuantity(),
-                    'price' => array(
-                        'amount' => number_format($item->getPrice(), 2, '.', ''),
+                    'quantity'           => (string)$item->getQuantity(),
+                    'price'              => array(
+                        'amount'   => number_format($item->getPrice(), 2, '.', ''),
                         'currency' => $this->currency,
                     ),
-                    'tax' => $item->hasTaxId() ? $item->getTaxId() : $this->taxRateId,
-                    'text' => $this->escapeString($item->getTitle()),
+                    'tax'                => $item->hasTaxId() ? $item->getTaxId() : $this->taxRateId,
+                    'text'               => $this->escapeString($item->getTitle()),
+                    'paymentMethodType'  => $item->getPaymentModeType(),
+                    'paymentSubjectType' => $item->getPaymentSubjectType(),
                 );
             }
         }
+
         return array(
-            'items' => $items,
+            'items'           => $items,
             'customerContact' => $this->escapeString($this->customerContact),
         );
     }
@@ -167,13 +190,15 @@ class YandexMoneyReceipt implements JsonSerializable
 
     public function legacyReplaceUnicodeMatches($matches)
     {
-        return html_entity_decode('&#x' . $matches[1] . ';', ENT_COMPAT, 'UTF-8');
+        return html_entity_decode('&#x'.$matches[1].';', ENT_COMPAT, 'UTF-8');
     }
 
     /**
      * Подгоняет стоимость товаров в чеке к общей цене заказа
+     *
      * @param float $orderAmount Общая стоимость заказа
      * @param bool $withShipping Поменять ли заодно и цену доставки
+     *
      * @return YandexMoneyReceipt
      */
     public function normalize($orderAmount, $withShipping = false)
@@ -191,8 +216,8 @@ class YandexMoneyReceipt implements JsonSerializable
         $realAmount = $this->getAmount($withShipping);
         if ($realAmount != $orderAmount) {
             $coefficient = $orderAmount / $realAmount;
-            $realAmount = 0.0;
-            $aloneId = null;
+            $realAmount  = 0.0;
+            $aloneId     = null;
             foreach ($this->items as $index => $item) {
                 if ($withShipping || !$item->isShipping()) {
                     $item->applyDiscountCoefficient($coefficient);
@@ -224,20 +249,23 @@ class YandexMoneyReceipt implements JsonSerializable
                     $item->increasePrice($diff);
                     array_splice($this->items, $aloneId + 1, 0, array($item));
                 } else {
-                    $qty = $this->items[$aloneId]->getQuantity() / 2.0;
+                    $qty  = $this->items[$aloneId]->getQuantity() / 2.0;
                     $item = $this->items[$aloneId]->fetchItem($qty);
                     $item->increasePrice($diff / $qty);
                     array_splice($this->items, $aloneId + 1, 0, array($item));
                 }
             }
         }
+
         return $this;
     }
 
     /**
      * Деэскейпирует строку для вставки в JSON
+     *
      * @param string $string Исходная строка
      * @param bool $escapeForJson
+     *
      * @return string Строка с эскейпированными "<" и ">"
      */
     private function escapeString($string, $escapeForJson = false)
@@ -249,6 +277,7 @@ class YandexMoneyReceipt implements JsonSerializable
                 html_entity_decode($string)
             );
         }
+
         return str_replace(array('<', '>'), array('&lt;', '&gt;'), html_entity_decode($string));
     }
 
@@ -258,18 +287,21 @@ class YandexMoneyReceipt implements JsonSerializable
         foreach ($this->items as $item) {
             if ($item->getPrice() >= 0.0) {
                 $itemsLines[] = '{'
-                    . '"quantity":"' . $item->getQuantity() . '",'
-                    . '"price":{'
-                    . '"amount":"' . number_format($item->getPrice(), 2, '.', '') . '",'
-                    . '"currency":"' . $this->currency . '"'
-                    . '},'
-                    . '"tax":' . ($item->hasTaxId() ? $item->getTaxId() : $this->taxRateId) . ','
-                    . '"text":"' . $this->escapeString($item->getTitle(), true) . '"'
-                    . '}';
+                                .'"quantity":"'.$item->getQuantity().'",'
+                                .'"price":{'
+                                .'"amount":"'.number_format($item->getPrice(), 2, '.', '').'",'
+                                .'"currency":"'.$this->currency.'"'
+                                .'},'
+                                .'"tax":'.($item->hasTaxId() ? $item->getTaxId() : $this->taxRateId).','
+                                .'"text":"'.$this->escapeString($item->getTitle(), true).'"'
+                                .'"paymentMethodType":"'.$item->getPaymentModeType().'"'
+                                .'"paymentSubjectType":"'.$item->getPaymentSubjectType().'"'
+                                .'}';
             }
         }
-        return '{"customerContact":"' . $this->escapeString($this->customerContact, true) . '",'
-            . '"items":[' . implode(',', $itemsLines) . ']}';
+
+        return '{"customerContact":"'.$this->escapeString($this->customerContact, true).'",'
+               .'"items":['.implode(',', $itemsLines).']}';
     }
 }
 
@@ -292,22 +324,29 @@ class YandexMoneyReceiptItem
 
     /** @var int|null Идентификатор ставки НДС для конкретного товара */
     private $taxId;
+    private $paymentModeType;
+    private $paymentSubjectType;
 
     /**
      * YandexMoneyReceiptItem constructor.
+     *
      * @param string $title
      * @param float $quantity
      * @param float $price
      * @param bool $isShipping
      * @param int|null $taxId
+     * @param $paymentModeType
+     * @param $paymentSubjectType
      */
-    public function __construct($title, $quantity, $price, $isShipping, $taxId)
+    public function __construct($title, $quantity, $price, $isShipping, $taxId, $paymentModeType, $paymentSubjectType)
     {
-        $this->title = mb_substr($title, 0, 60, 'utf-8');
-        $this->quantity = (float)$quantity;
-        $this->price = round($price, 2);
-        $this->shipping = $isShipping;
-        $this->taxId = $taxId;
+        $this->title              = mb_substr($title, 0, 60, 'utf-8');
+        $this->quantity           = (float)$quantity;
+        $this->price              = round($price, 2);
+        $this->shipping           = $isShipping;
+        $this->taxId              = $taxId;
+        $this->paymentModeType    = $paymentModeType;
+        $this->paymentSubjectType = $paymentSubjectType;
     }
 
     /**
@@ -366,6 +405,7 @@ class YandexMoneyReceiptItem
 
     /**
      * Привеняет для товара скидку
+     *
      * @param float $value Множитель скидки
      */
     public function applyDiscountCoefficient($value)
@@ -375,6 +415,7 @@ class YandexMoneyReceiptItem
 
     /**
      * Увеличивает цену товара на указанную величину
+     *
      * @param float $value Сумма на которую цену товара увеличиваем
      */
     public function increasePrice($value)
@@ -384,7 +425,9 @@ class YandexMoneyReceiptItem
 
     /**
      * Уменьшает количество покупаемого товара на указанное, возвращает объект позиции в чеке с уменьшаемым количеством
+     *
      * @param float $count Количество на которое уменьшаем позицию в чеке
+     *
      * @return YandexMoneyReceiptItem Новый инстанс позиции в чеке
      */
     public function fetchItem($count)
@@ -392,8 +435,9 @@ class YandexMoneyReceiptItem
         if ($count > $this->quantity) {
             throw new BadMethodCallException();
         }
-        $result = new YandexMoneyReceiptItem($this->title, $count, $this->price, false, $this->taxId);
+        $result         = new YandexMoneyReceiptItem($this->title, $count, $this->price, false, $this->taxId);
         $this->quantity -= $count;
+
         return $result;
     }
 
@@ -404,5 +448,21 @@ class YandexMoneyReceiptItem
     public function isShipping()
     {
         return $this->shipping;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaymentModeType()
+    {
+        return $this->paymentModeType;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPaymentSubjectType()
+    {
+        return $this->paymentSubjectType;
     }
 }
