@@ -107,11 +107,12 @@ class ControllerPaymentYamodule extends Controller
                         $receipt->addItem($row['name'], $row['price'] * $disc, $row['quantity'],
                             $ya_kassa_tax[$tax_rate_id], $defaultPaymentMode, $defaultPaymentSubject);
                     } else {
-                        $receipt->addItem($row['name'], $row['price'] * $disc, $row['quantity'], $defaultPaymentMode,
+                        $receipt->addItem($row['name'], $row['price'] * $disc, $row['quantity'], null,
+                            $defaultPaymentMode,
                             $defaultPaymentSubject);
                     }
                 } else {
-                    $receipt->addItem($row['name'], $row['price'] * $disc, $row['quantity'], $defaultPaymentMode,
+                    $receipt->addItem($row['name'], $row['price'] * $disc, $row['quantity'], null, $defaultPaymentMode,
                         $defaultPaymentSubject);
                 }
             }
@@ -121,7 +122,7 @@ class ControllerPaymentYamodule extends Controller
                 isset($this->session->data['shipping_method']['title']) &&
                 $shippingCost > 0
             ) {
-                $receipt->addShipping($this->session->data['shipping_method']['title'], $shippingCost,null,
+                $receipt->addShipping($this->session->data['shipping_method']['title'], $shippingCost, null,
                     $defaultDeliveryPaymentMode, $defaultDeliveryPaymentSubject);
             }
             if ($receipt->notEmpty()) {
