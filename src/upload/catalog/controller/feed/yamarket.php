@@ -93,6 +93,7 @@ class ControllerFeedYamarket extends Controller
             $data['id'] = $product['product_id'];
             $data['available'] = $available;
             $data['url'] = htmlspecialchars_decode($this->url->link('product/product', 'product_id=' . $product['product_id']));
+            $data['url'] = $this->convertUrl($data['url']);
 
             $data['price'] = round(floatval($product['price']), 2);
             if ($product['special'] && $product['special'] < $product['price']) {
@@ -215,7 +216,19 @@ class ControllerFeedYamarket extends Controller
                 }
             }
         }
-        return $url;
+        return $this->convertUrl($url);
+    }
+
+    private function convertUrl($url) {
+    
+        if (strpos($url,'product/product&product_id')) {
+            return $url;
+        }
+
+        $blocks = explode('/',$url);
+        $blocks[count($blocks) - 1] = rawurlencode($blocks[count($blocks) - 1]);
+
+        return implode('/',$blocks);
     }
 
 	public function makeOfferCombination($data, $product, $shop_currency, $offers_currency, $decimal_place, $object)
