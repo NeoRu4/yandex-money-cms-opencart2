@@ -219,8 +219,8 @@ class ControllerFeedYamarket extends Controller
         return $this->convertUrl($url);
     }
 
-    private function convertUrl($url) {
-    
+    private function convertUrl($url) 
+    {
         if (strpos($url,'product/product&product_id')) {
             return $url;
         }
